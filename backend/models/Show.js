@@ -21,7 +21,20 @@ const showSchema = new mongoose.Schema({
   },
   ticketPrice: Number,
   totalSeats: Number,
-  availableSeats: Number
+  availableSeats: Number,
+  seats: [
+    {
+      seatNumber: String,
+      category: {
+        type: String,
+        enum: ['Platinum', 'Recliner', 'Gold']
+      },
+      isBooked: {
+        type: Boolean,
+        default: false
+      }
+    }
+  ]
 }, { timestamps: true })
 
 module.exports = mongoose.model('Show', showSchema)

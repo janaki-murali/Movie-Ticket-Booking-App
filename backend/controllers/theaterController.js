@@ -52,7 +52,7 @@ const getMyTheater = async (req, res) => {
   }
 }
 
-// Add Show to Theater
+// Add Show to Theater (with seat generation)
 const addShow = async (req, res) => {
   const { movieId, screenNumber, showDate, showTime, language, format, ticketPrice, totalSeats } = req.body
   const ownerId = req.user.id
@@ -68,6 +68,23 @@ const addShow = async (req, res) => {
       return res.status(404).json({ message: 'Movie not found' })
     }
 
+    const seats = []
+    const rows = ['A', 'B', 'C', 'D', 'E']
+    let count = 1
+
+    for (let i = 0; i < totalSeats; i++) {
+      const row = rows[Math.floor(i / 10) % rows.length]
+      const seatNum = `${row}${count}`
+      let category = 'Gold'
+      if (row === 'A' || row === 'B') category = 'Platinum'
+      if (row === 'E') category = 'Recliner'
+
+      seats.push({ seatNumber: seatNum, category, isBooked: false })
+
+      count++
+      if (count > 10) count = 1
+    }
+
     const show = new Show({
       movie: movieId,
       theater: theater._id,
@@ -78,7 +95,8 @@ const addShow = async (req, res) => {
       format,
       ticketPrice,
       totalSeats,
-      availableSeats: totalSeats
+      availableSeats: totalSeats,
+      seats
     })
 
     const savedShow = await show.save()
@@ -88,7 +106,7 @@ const addShow = async (req, res) => {
   }
 }
 
-//  View All My Shows
+// View All My Shows
 const getMyShows = async (req, res) => {
   try {
     const theater = await Theater.findOne({ owner: req.user.id })
@@ -103,13 +121,13 @@ const getMyShows = async (req, res) => {
   }
 }
 
+// Update Show
 const updateShow = async (req, res) => {
   const { id } = req.params
   const updates = req.body
 
   try {
     const show = await Show.findById(id)
-
     if (!show) {
       return res.status(404).json({ message: 'Show not found' })
     }
@@ -126,12 +144,12 @@ const updateShow = async (req, res) => {
   }
 }
 
+// Delete Show
 const deleteShow = async (req, res) => {
   const { id } = req.params
 
   try {
     const show = await Show.findById(id)
-
     if (!show) {
       return res.status(404).json({ message: 'Show not found' })
     }

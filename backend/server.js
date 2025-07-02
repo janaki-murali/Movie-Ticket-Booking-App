@@ -19,6 +19,14 @@ app.use('/api/admin', adminRoutes)
 const bookingRoutes = require('./routes/bookingRoutes')
 app.use('/api/bookings', bookingRoutes)
 
+const showRoutes = require('./routes/showRoutes')
+app.use('/api/shows', showRoutes)
+const paymentRoutes = require('./routes/paymentRoutes')
+app.use('/api/payments', paymentRoutes)
+const reviewRoutes = require('./routes/reviewRoutes')
+app.use('/api/reviews', reviewRoutes)
+
+
 
 app.get('/', (req, res) => {
   res.send('API is running')

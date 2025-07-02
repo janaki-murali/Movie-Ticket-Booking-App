@@ -12,8 +12,12 @@ const movieSchema = new mongoose.Schema({
     required: true
   },
   description: { type: String },
-  posterUrl: { type: String },
-  rating: { type: Number, default: 0 }
+posterUrl: { type: String },
+rating: { type: Number, default: 0 },
+averageRating: {
+type: Number,
+default: 0
+}
 }, { timestamps: true })
 
 const Movie = mongoose.model('Movie', movieSchema)

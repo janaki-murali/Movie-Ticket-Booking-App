@@ -30,7 +30,11 @@ const theaterSchema = new mongoose.Schema({
   isApproved: {
     type: Boolean,
     default: false
-  }
+  },
+  averageRating: {
+  type: Number,
+  default: 0
+ }
 }, { timestamps: true })
 
 module.exports = mongoose.model('Theater', theaterSchema)
